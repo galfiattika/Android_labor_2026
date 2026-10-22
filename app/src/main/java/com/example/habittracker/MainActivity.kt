@@ -1,46 +1,55 @@
 package com.example.habittracker
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import android.util.Log
-import com.example.habittracker.databinding.ActivitySplashBinding
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.habittracker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    val TAG = "MainActivity"
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        val binding = ActivitySplashBinding.inflate(layoutInflater)
+
+        // A fő Activity layoutjának (activity_main.xml) bindelése
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        title=TAG
-        Log.d(TAG, "onCreate")
 
-    }
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart")
+        // NavController lekérése a NavHostFragmentből
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        // Főoldalak konfigurációja az AppBar-hoz
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment, R.id.profileFragment)
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Alsó menü összekötése a NavControllerrel
+        binding.bottomNav.setupWithNavController(navController)
+
+        // Alsó menü elrejtése a Login és Register képernyőkön
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> {
+                    binding.bottomNav.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNav.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG,"onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG,"onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy")
+    override fun onSupportNavigateUp(): Boolean {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        return navHostFragment.navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

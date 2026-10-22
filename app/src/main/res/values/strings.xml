@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">HabitTracker</string>
+    <string name="login_title">Welcome back</string>
+    <string name="register_title">Create your account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="login">Log in</string>
+    <string name="create_account">Create account</string>
+    <string name="back_to_login">Back to log in</string>
+    <string name="auth_fields_required">Email and password are required.</string>
+    <string name="registration_fields_required">All fields are required.</string>
+    <string name="passwords_do_not_match">Passwords do not match.</string>
+    <string name="login_success">Login successful.</string>
+    <string name="registration_success">Account created. Please log in.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
