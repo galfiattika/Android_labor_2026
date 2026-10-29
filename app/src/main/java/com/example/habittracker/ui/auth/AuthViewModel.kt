@@ -34,9 +34,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun signUp(email: String, password: String) {
+    fun signUp(email: String, password: String, username: String) {
         authenticate(isLogin = false) {
-            repository.signUp(email, password)
+            repository.signUp(email, password, username)
         }
     }
 

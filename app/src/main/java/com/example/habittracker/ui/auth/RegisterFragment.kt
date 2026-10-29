@@ -29,6 +29,7 @@ class RegisterFragment : Fragment() {
         binding.btnCreateAccount.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString()
+            val username = email.substringBefore("@")
             val confirmPassword = binding.etConfirmPassword.text.toString()
             if (email.isBlank() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(
@@ -43,7 +44,7 @@ class RegisterFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                viewModel.signUp(email, password)
+                viewModel.signUp(email, password, username)
             }
         }
         binding.btnGoToLogin.setOnClickListener {
