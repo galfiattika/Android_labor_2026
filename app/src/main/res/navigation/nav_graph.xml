@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addHabitFragment"
+            app:destination="@id/addHabitFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_createScheduleFragment"
+            app:destination="@id/createScheduleFragment" />
     </fragment>
 
     <fragment
@@ -45,5 +51,17 @@
         android:name="com.example.habittracker.ui.auth.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
+
+    <fragment
+        android:id="@+id/addHabitFragment"
+        android:name="com.example.habittracker.ui.home.AddHabitFragment"
+        android:label="Add Habit"
+        tools:layout="@layout/fragment_add_habit" />
+
+    <fragment
+        android:id="@+id/createScheduleFragment"
+        android:name="com.example.habittracker.ui.home.CreateScheduleFragment"
+        android:label="Create Schedule"
+        tools:layout="@layout/fragment_create_schedule" />
 
 </navigation>

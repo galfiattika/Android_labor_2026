@@ -1,7 +1,9 @@
 package com.example.habittracker.network
 
 import android.content.Context
-import com.example.habittracker.utils.SessionManager
+import com.example.habittracker.utils.LocalDateTimeAdapter
+import com.google.gson.GsonBuilder
+import java.time.LocalDateTime
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,10 +21,14 @@ object RetrofitClient {
             .addInterceptor(AuthInterceptor(context))
             .build()
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+            .create()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(AuthApiService::class.java)
     }
