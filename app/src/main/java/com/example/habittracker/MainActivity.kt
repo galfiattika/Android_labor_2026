@@ -13,31 +13,36 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    companion object {
+        const val EXTRA_HAS_SESSION = "com.example.habittracker.HAS_SESSION"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // A fő Activity layoutjának (activity_main.xml) bindelése
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // NavController lekérése a NavHostFragmentből
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        if (intent.getBooleanExtra(EXTRA_HAS_SESSION, false)) {
+            val graph = navController.navInflater.inflate(R.navigation.nav_graph)
+            graph.setStartDestination(R.id.homeFragment)
+            navController.setGraph(graph, intent.extras)
+        }
 
-        // Főoldalak konfigurációja az AppBar-hoz
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.profileFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+        supportActionBar?.hide()
 
-        // Alsó menü összekötése a NavControllerrel
         binding.bottomNav.setupWithNavController(navController)
 
-        // Alsó menü elrejtése a Login és Register képernyőkön
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.loginFragment, R.id.registerFragment -> {
+                R.id.loginFragment, R.id.registerFragment, R.id.resetPasswordFragment -> {
                     binding.bottomNav.visibility = View.GONE
                 }
                 else -> {

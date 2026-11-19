@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentLoginBinding
+import com.example.habittracker.ui.UiState
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -39,31 +40,26 @@ class LoginFragment : Fragment() {
                 viewModel.login(email, password)
             }
         }
+        binding.btnForgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetPasswordFragment)
+        }
         binding.btnGoToRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
-        viewModel.authState.observe(viewLifecycleOwner, ::renderAuthState)
-    }
-
-    private fun renderAuthState(state: AuthUiState) {
-        val isLoading = state is AuthUiState.Loading
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.btnLogin.isEnabled = !isLoading
-        binding.btnGoToRegister.isEnabled = !isLoading
-
-        when (state) {
-            AuthUiState.Idle, AuthUiState.Loading -> Unit
-            is AuthUiState.Error -> {
-                Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
-                viewModel.consumeState()
-            }
-            is AuthUiState.Success -> {
-                if (state.isLogin) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.login_success,
-                        Toast.LENGTH_SHORT
-                    ).show()
+        viewModel.authState.observe(viewLifecycleOwner) { state ->
+            val isLoading = state is UiState.Loading
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.btnLogin.isEnabled = !isLoading
+            binding.btnGoToRegister.isEnabled = !isLoading
+            binding.btnForgotPassword.isEnabled = !isLoading
+            when (state) {
+                UiState.Idle, UiState.Loading -> Unit
+                is UiState.Error -> {
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                    viewModel.consumeState()
+                }
+                is UiState.Success -> if (state.data) {
+                    Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
                     viewModel.consumeState()
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }

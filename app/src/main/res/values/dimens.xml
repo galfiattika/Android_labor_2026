@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="habit_row_padding">12dp</dimen>
+    <dimen name="habit_progress_height">6dp</dimen>
+    <dimen name="habit_progress_top_margin">6dp</dimen>
+</resources>

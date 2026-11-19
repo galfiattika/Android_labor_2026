@@ -48,6 +48,19 @@ data class ScheduleResponse(
 )
 
 data class ProgressResponseDto(
+    val id: Long? = null,
+    val scheduleId: Long? = null,
+    val date: String? = null,
+    val logged_time: Int? = null,
+    val notes: String? = null,
+    val is_completed: Boolean? = null,
+    val created_at: String? = null,
+    val updated_at: String? = null
+)
+
+/* Legacy progress shape kept for compatibility with older API payloads. */
+@Deprecated("Use ProgressResponseDto")
+data class LegacyProgressResponseDto(
     val id: Long,
     val userId: Long,
     val progressValue: Double,

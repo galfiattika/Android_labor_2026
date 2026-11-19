@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentRegisterBinding
+import com.example.habittracker.ui.UiState
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
@@ -50,23 +51,18 @@ class RegisterFragment : Fragment() {
         binding.btnGoToLogin.setOnClickListener {
             findNavController().navigateUp()
         }
-        viewModel.authState.observe(viewLifecycleOwner, ::renderAuthState)
-    }
-
-    private fun renderAuthState(state: AuthUiState) {
-        val isLoading = state is AuthUiState.Loading
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.btnCreateAccount.isEnabled = !isLoading
-        binding.btnGoToLogin.isEnabled = !isLoading
-
-        when (state) {
-            AuthUiState.Idle, AuthUiState.Loading -> Unit
-            is AuthUiState.Error -> {
-                Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
-                viewModel.consumeState()
-            }
-            is AuthUiState.Success -> {
-                if (!state.isLogin) {
+        viewModel.authState.observe(viewLifecycleOwner) { state ->
+            val isLoading = state is UiState.Loading
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.btnCreateAccount.isEnabled = !isLoading
+            binding.btnGoToLogin.isEnabled = !isLoading
+            when (state) {
+                UiState.Idle, UiState.Loading -> Unit
+                is UiState.Error -> {
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                    viewModel.consumeState()
+                }
+                is UiState.Success -> if (!state.data) {
                     Toast.makeText(
                         requireContext(),
                         R.string.registration_success,
